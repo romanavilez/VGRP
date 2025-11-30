@@ -13,6 +13,9 @@ export async function populateDatabase() {
     await populateDeveloperTable(idStore.developerIds);
     await populateGenreTable(idStore.genreIds);
     await populatePlatformTable(idStore.platformIds);
+    await populateGamerTable();
+    await populateUserTable();
+    await populateReviewTable(idStore.gameIds);
 }
 
 async function grabIds() {
@@ -160,4 +163,132 @@ async function populatePlatformTable(platformIds) {
         console.log("Platform: ", i++);
     }
     console.log("Successfully populated Platform and Played_On tables!");
+}
+
+// Populates the Gamer table with 20 gamer profiles with unique tags, bios, and avatars
+async function populateGamerTable() {
+    const gamers = [
+        { tag: "Ninja", dob: "1995-03-15", bio: "Competitive FPS player", avatar: "https://i.pravatar.cc/150?img=1" },
+        { tag: "Myth", dob: "1998-07-22", bio: "RPG enthusiast and speedrunner", avatar: "https://i.pravatar.cc/150?img=2" },
+        { tag: "Ronaldo", dob: "1996-11-30", bio: "Strategy game lover", avatar: "https://i.pravatar.cc/150?img=3" },
+        { tag: "Messi", dob: "1999-01-10", bio: "Platformer speedrunner", avatar: "https://i.pravatar.cc/150?img=4" },
+        { tag: "Fl67cher", dob: "1994-05-18", bio: "Casual gamer and streamer", avatar: "https://i.pravatar.cc/150?img=5" },
+        { tag: "Mr_IR7", dob: "2000-09-05", bio: "Indie game collector", avatar: "https://i.pravatar.cc/150?img=6" },
+        { tag: "HuE", dob: "1997-12-25", bio: "Competitive multiplayer player", avatar: "https://i.pravatar.cc/150?img=7" },
+        { tag: "N8t3", dob: "1993-04-14", bio: "Dark souls enthusiast", avatar: "https://i.pravatar.cc/150?img=8" },
+        { tag: "Tenz", dob: "2001-06-08", bio: "Story-driven game fan", avatar: "https://i.pravatar.cc/150?img=9" },
+        { tag: "Elevenz", dob: "1992-02-28", bio: "Retro gaming collector", avatar: "https://i.pravatar.cc/150?img=10" },
+        { tag: "Ludwig", dob: "1996-08-12", bio: "Puzzle game solver", avatar: "https://i.pravatar.cc/150?img=11" },
+        { tag: "JasonTheWeen", dob: "1999-10-19", bio: "Adventure game lover", avatar: "https://i.pravatar.cc/150?img=12" },
+        { tag: "LosPolos", dob: "1995-01-03", bio: "Battle royale player", avatar: "https://i.pravatar.cc/150?img=13" },
+        { tag: "Wad", dob: "1997-03-27", bio: "MMO enthusiast", avatar: "https://i.pravatar.cc/150?img=14" },
+        { tag: "yusuf7n", dob: "1994-09-11", bio: "Fighting game pro", avatar: "https://i.pravatar.cc/150?img=15" },
+        { tag: "Eggster", dob: "2000-05-20", bio: "Simulation game player", avatar: "https://i.pravatar.cc/150?img=16" },
+        { tag: "Demon1", dob: "1998-11-06", bio: "Racing game competitor", avatar: "https://i.pravatar.cc/150?img=17" },
+        { tag: "S0m", dob: "1996-07-14", bio: "VR game explorer", avatar: "https://i.pravatar.cc/150?img=18" },
+        { tag: "senCurry", dob: "1999-04-09", bio: "Sci-fi game lover", avatar: "https://i.pravatar.cc/150?img=19" },
+        { tag: "Zellsis", dob: "1993-12-22", bio: "Retro arcade player", avatar: "https://i.pravatar.cc/150?img=20" }
+    ];
+    
+    let i = 0;
+    for (const gamer of gamers) {
+        const gamerQuery = `INSERT INTO Gamer (gamer_tag, gamer_dob, bio, avatar) VALUES (?,?,?,?)`;
+        const gqValues = [gamer.tag, gamer.dob, gamer.bio, gamer.avatar];
+        db.query(gamerQuery, gqValues, (err) => {
+            if (err) throw err;
+        });
+        console.log("Gamer: ", i++);
+    }
+    console.log("Successfully populated Gamer table!");
+}
+
+// Populates the User table with 10 users, each linked to one of the 20 gamers
+async function populateUserTable() {
+    const users = [
+        { username: "Ninja", email: "Ninja@gmail.com", dob: "1995-03-15", gamer_tag: "Ninja" },
+        { username: "TSM_Myth", email: "Myth@yahoo.com", dob: "1998-07-22", gamer_tag: "Myth" },
+        { username: "Ronaldo7", email: "RonaldoRonaldoSIUU@gmail.com", dob: "1996-11-30", gamer_tag: "Ronaldo" },
+        { username: "Messi", email: "ItzMessi@gmail.com", dob: "1999-01-10", gamer_tag: "Messi" },
+        { username: "Mr_IR7", email: "ir7isme@gmail.com", dob: "2000-09-05", gamer_tag: "Mr_IR7" },
+        { username: "Fl67cher67", email: "fletcher6767@outlook.com", dob: "1994-05-18", gamer_tag: "Fl67cher" },
+        { username: "Tenzz", email: "Tyson@uw.edu", dob: "2001-06-08", gamer_tag: "Tenz" },
+        { username: "Zellsis", email: "Zellz@gmail.com", dob: "1993-12-22", gamer_tag: "Zellsis" },
+        { username: "yusuf7n", email: "yousuf@gmail.com", dob: "1994-09-11", gamer_tag: "yusuf7n" },
+        { username: "Ludwig", email: "ItzLud@gmail.com", dob: "1996-08-12", gamer_tag: "Ludwig" }
+    ];
+    
+    let i = 0;
+    for (const user of users) {
+        const userQuery = `INSERT INTO User (username, email, user_dob, gamer_tag) VALUES (?,?,?,?)`;
+        const uqValues = [user.username, user.email, user.dob, user.gamer_tag];
+        db.query(userQuery, uqValues, (err) => {
+            if (err) throw err;
+        });
+        console.log("User: ", i++);
+    }
+    console.log("Successfully populated User table!");
+}
+
+// Populates the Review table with 40 reviews distributed across games and users
+async function populateReviewTable(gameIds) {
+    // Get array of game titles from the database since we need them for foreign keys
+    db.query(`SELECT game_title FROM Game LIMIT 40`, (err, games) => {
+        if (err) throw err;
+        if (!games || games.length === 0) {
+            console.log("No games found to create reviews for");
+            return;
+        }
+        
+        const usernames = ["Ninja", "TSM_Myth", "Ronaldo7", "Fl67cher67", "Mr_IR7", 
+                          "Tenzz", "Zellsis", "yusuf7n", "Ludwig", "Messi"];
+        const reviewTitles = [
+            "Amazing experience!", "Great gameplay", "Highly recommended", "Worth the money", "Epic adventure",
+            "Mind-blowing graphics", "Perfect story", "Addictive gameplay", "Best purchase ever", "Absolutely fantastic",
+            "Stunning visuals", "Engaging plot", "Outstanding performance", "Must play", "Brilliant design",
+            "Captivating adventure", "Incredible soundtrack", "Masterpiece", "10/10 would play again", "Exceeded expectations",
+            "Phenomenal game", "Loved every minute", "Exceeded all hopes", "Gaming perfection", "Totally immersed",
+            "Unforgettable experience", "Top tier game", "Absolutely stunning", "Best game of the year", "Pure joy",
+            "Outstanding craftsmanship", "Incredibly fun", "One for the ages", "Timeless classic", "Gaming excellence",
+            "Tremendous fun", "Beautifully crafted", "Simply superb", "Gaming artistry", "Total masterpiece"
+        ];
+        const reviewTexts = [
+            "This game is absolutely incredible! Every moment is filled with excitement and wonder.",
+            "I couldn't stop playing. The gameplay mechanics are smooth and intuitive.",
+            "The story kept me on the edge of my seat from start to finish.",
+            "Graphics are stunning and the world-building is phenomenal.",
+            "One of the best gaming experiences I've had in years.",
+            "The soundtrack perfectly complements the gameplay.",
+            "Highly addictive with great replay value.",
+            "A true masterpiece in gaming design.",
+            "Exceeded all my expectations in every way.",
+            "This should be the gold standard for games.",
+            "Absolutely mesmerizing from beginning to end.",
+            "The attention to detail is remarkable.",
+            "Best investment in gaming I ever made.",
+            "Pure magic in video game form.",
+            "A game that will stay with me forever."
+        ];
+        
+        let i = 0;
+        for (let r = 0; r < 40; r++) {
+            const gameIndex = r % games.length;
+            const gameTitle = games[gameIndex].game_title;
+            const username = usernames[r % usernames.length];
+            const rating = (Math.random() * 4 + 1).toFixed(2);
+            const daysAgo = Math.floor(Math.random() * 365);
+            const reviewDate = new Date();
+            reviewDate.setDate(reviewDate.getDate() - daysAgo);
+            const reviewDateStr = reviewDate.toISOString().slice(0, 10);
+            const titleIndex = Math.floor(Math.random() * reviewTitles.length);
+            const textIndex = Math.floor(Math.random() * reviewTexts.length);
+            
+            const reviewQuery = `INSERT INTO Review (rev_id, rev_title, rev_text, rev_date, rating, game_title, username) VALUES (?,?,?,?,?,?,?)`;
+            const rqValues = [r, reviewTitles[titleIndex], reviewTexts[textIndex], reviewDateStr, rating, gameTitle, username];
+            db.query(reviewQuery, rqValues, (err) => {
+                if (err) throw err;
+            });
+            console.log("Review: ", i++);
+        }
+        console.log("Successfully populated Review table!");
+    });
 }
