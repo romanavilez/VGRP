@@ -16,6 +16,8 @@ export async function populateDatabase() {
     await populateGamerTable();
     await populateUserTable();
     await populateReviewTable(idStore.gameIds);
+    await populateFollowsTable();
+    await populatePlaysTable(idStore.gameIds);
 }
 
 async function grabIds() {
@@ -290,5 +292,95 @@ async function populateReviewTable(gameIds) {
             console.log("Review: ", i++);
         }
         console.log("Successfully populated Review table!");
+    });
+}
+
+// Populates the Follows table with follow relationships: users follow several gamers
+async function populateFollowsTable() {
+    // Get all users and their linked gamer tags
+    db.query(`SELECT username, gamer_tag FROM User`, (err, users) => {
+        if (err) throw err;
+        if (!users || users.length === 0) {
+            console.log("No users found to create follows for");
+            return;
+        }
+
+        // Get all gamer tags
+        db.query(`SELECT gamer_tag FROM Gamer`, (err2, gamers) => {
+            if (err2) throw err2;
+            if (!gamers || gamers.length === 0) {
+                console.log("No gamers found to create follows for");
+                return;
+            }
+
+            const gamerTags = gamers.map(g => g.gamer_tag);
+            let inserted = 0;
+
+            for (const user of users) {
+                const available = gamerTags.filter(gt => gt !== user.gamer_tag);
+                if (available.length === 0) continue;
+
+                // Each user follows between 1 and 10 other gamers
+                const numFollows = Math.min(10, Math.max(1, Math.floor(Math.random() * 9) + 1));
+                const chosen = new Set();
+                while (chosen.size < numFollows) {
+                    const pick = available[Math.floor(Math.random() * available.length)];
+                    chosen.add(pick);
+                }
+
+                for (const gt of chosen) {
+                    const q = `INSERT INTO Follows (username, gamer_tag) VALUES (?,?)`;
+                    db.query(q, [user.username, gt], (e) => {
+                        if (e) throw e;
+                    });
+                    inserted++;
+                }
+            }
+
+            console.log("Successfully populated Follows table! Rows inserted:", inserted);
+        });
+    });
+}
+
+// Populates the Plays table with which gamers have played which games
+async function populatePlaysTable(gameIds) {
+    // Get all gamer tags
+    db.query(`SELECT gamer_tag FROM Gamer`, (err, gamers) => {
+        if (err) throw err;
+        if (!gamers || gamers.length === 0) {
+            console.log("No gamers found to create plays for");
+            return;
+        }
+
+        // Get a set of game titles to use
+        db.query(`SELECT game_title FROM Game LIMIT 80`, (err2, games) => {
+            if (err2) throw err2;
+            if (!games || games.length === 0) {
+                console.log("No games found to create plays for");
+                return;
+            }
+
+            const gameTitles = games.map(g => g.game_title);
+            let inserted = 0;
+
+            for (const gamer of gamers) {
+                // Each gamer plays between 1 and 6 games
+                const numPlays = Math.min(6, Math.max(1, Math.floor(Math.random() * 5) + 1));
+                const chosen = new Set();
+                while (chosen.size < numPlays) {
+                    chosen.add(gameTitles[Math.floor(Math.random() * gameTitles.length)]);
+                }
+
+                for (const title of chosen) {
+                    const q = `INSERT INTO Plays (gamer_tag, game_title) VALUES (?,?)`;
+                    db.query(q, [gamer.gamer_tag, title], (e) => {
+                        if (e) throw e;
+                    });
+                    inserted++;
+                }
+            }
+
+            console.log("Successfully populated Plays table! Rows inserted:", inserted);
+        });
     });
 }
