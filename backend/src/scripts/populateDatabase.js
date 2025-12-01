@@ -1,5 +1,6 @@
 import axios from "axios";
 import { db } from "../lib/db.js";
+import { testInvalidData } from "./testConstraints.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -18,6 +19,9 @@ export async function populateDatabase() {
     await populateReviewTable(idStore.gameIds);
     await populateFollowsTable();
     await populatePlaysTable(idStore.gameIds);
+
+    // Uncomment line below to test invalid table entries
+    // testInvalidData();
 }
 
 async function grabIds() {
