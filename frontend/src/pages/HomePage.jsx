@@ -65,19 +65,19 @@ const HomePage = () => {
     }, []);
 
     const applyFilters = () => {
-        let filtered = games;
-        if (filteredDev) {
-            filtered = filtered.filter(game => game.developers?.split(",").map(s => s.trim()).includes(filteredDev));
-        }
+        const params = new URLSearchParams();
+        if (filteredDev) params.append("developer", filteredDev);
+        if (filteredPlat) params.append("platform", filteredPlat);
+        if (filteredGenre) params.append("genre", filteredGenre);
 
-        if (filteredPlat) {
-            filtered = filtered.filter(game => game.platforms?.split(",").map(s => s.trim()).includes(filteredPlat));
-        }
-
-        if (filteredGenre) {
-            filtered = filtered.filter(game => game.genres?.split(",").map(s => s.trim()).includes(filteredGenre));
-        }
-        setFilteredGames(filtered);
+        fetch(`http://localhost:5001/api/games/filter?${params.toString()}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setFilteredGames(data);
+            })
+            .catch((err) => {
+                console.log("Error fetching filtered games: ", err);
+            });
     }
 
     const resetFilters = () => {

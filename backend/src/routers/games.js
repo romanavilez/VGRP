@@ -30,7 +30,10 @@ router.get("/filter", (req, res) => {
     const { developer = null, platform = null, genre = null } = req.query;
 
     const sql = `
-        SELECT DISTINCT g.*
+        SELECT DISTINCT g.*,
+            GROUP_CONCAT(DISTINCT d.dev_name SEPARATOR ', ') AS developers,
+            GROUP_CONCAT(DISTINCT po.plat_name SEPARATOR ', ') AS platforms,
+            GROUP_CONCAT(DISTINCT gg.genre_name SEPARATOR ', ') AS genres
         FROM Game g
         LEFT JOIN Develops d      ON d.game_title = g.game_title
         LEFT JOIN Played_On po    ON po.game_title = g.game_title
@@ -38,6 +41,7 @@ router.get("/filter", (req, res) => {
         WHERE (? IS NULL OR d.dev_name = ?)
         AND (? IS NULL OR po.plat_name = ?)
         AND (? IS NULL OR gg.genre_name = ?)
+        GROUP BY g.game_title
         ORDER BY g.overall_rating DESC, g.release_date DESC
     `;
 
