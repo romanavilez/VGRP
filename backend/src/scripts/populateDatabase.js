@@ -16,9 +16,9 @@ export async function populateDatabase() {
     await populatePlatformTable(idStore.platformIds);
     await populateGamerTable();
     await populateUserTable();
-    await populateReviewTable(idStore.gameIds);
+    await populateReviewTable();
     await populateFollowsTable();
-    await populatePlaysTable(idStore.gameIds);
+    await populatePlaysTable();
 
     // Uncomment line below to test invalid table entries
     // testInvalidData();
@@ -44,11 +44,17 @@ async function grabIds() {
             idStore.gameIds.add(game.id);
             for (const genre of game.genres) {
                 // Add genre id to idstore
-                idStore.genreIds.set(genre.id, game.name);
+                if (!idStore.genreIds.has(genre.id)) {
+                    idStore.genreIds.set(genre.id, new Set());
+                }
+                idStore.genreIds.get(genre.id).add(game.name);
             }
             for (const platform of game.platforms) {
                 // Add platform id to idstore
-                idStore.platformIds.set(platform.platform.id, game.name);
+                if (!idStore.platformIds.has(platform.platform.id)) {
+                    idStore.platformIds.set(platform.platform.id, new Set());
+                }
+                idStore.platformIds.get(platform.platform.id).add(game.name);
             }
         }
         pageNum++;
@@ -58,7 +64,7 @@ async function grabIds() {
 
 async function populateGameTable(idStore) {
     let todaysDate = new Date().toISOString().slice(0,10);
-    let i = 0;
+    let inserted = 0;
     for (const gameId of idStore.gameIds) {
         // Fetch games by id
         const res = await axios.get(`${RAWG_API}/games/${gameId}`, {
@@ -71,7 +77,10 @@ async function populateGameTable(idStore) {
         // Store developer ids (need to grab game by id)
         for (const developer of game.developers) {
             // Add developer id to idstore
-            idStore.developerIds.set(developer.id, game.name);
+            if (!idStore.developerIds.has(developer.id)) {
+                idStore.developerIds.set(developer.id, new Set());
+            }
+            idStore.developerIds.get(developer.id).add(game.name);
         }
         // Grab games that have been released
         let releasedDate = game.released === null ? todaysDate : game.released;
@@ -82,14 +91,14 @@ async function populateGameTable(idStore) {
         db.query(gameQuery, values, (err) => {
             if (err) throw err;
         }); 
-        console.log("Game: ", i++);
+        inserted++;
     }
-    console.log("Successfully populated Game table!");
+    console.log("Successfully populated Game table! Rows inserted: ", inserted);
 }
 
 async function populateDeveloperTable(developerIds) {
-    let i = 0;
-    for (const [developerId, gameTitle] of developerIds) {
+    let inserted = 0;
+    for (const [developerId, gameTitles] of developerIds) {
         // Fetch developers by id
         const res = await axios.get(`${RAWG_API}/developers/${developerId}`, {
             params: {
@@ -104,20 +113,22 @@ async function populateDeveloperTable(developerIds) {
         db.query(devQuery, dqValues, (err) => {
             if (err) throw err;
         });
-        // Insert developer name and game title into Develops table
-        const developsQuery = `INSERT INTO Develops (dev_name, game_title) VALUES (?,?)`;
-        const devsqValues = [dev.name, gameTitle];
-        db.query(developsQuery, devsqValues, (err) => {
-            if (err) throw err;
-        });
-        console.log("Developer: ", i++);
+        // Insert developer name and game titles into Develops table
+        for (const gameTitle of gameTitles) {
+            const developsQuery = `INSERT INTO Develops (dev_name, game_title) VALUES (?,?)`;
+            const devsqValues = [dev.name, gameTitle];
+            db.query(developsQuery, devsqValues, (err) => {
+                if (err) throw err;
+            });
+        }
+        inserted++;
     }
-    console.log("Successfully populated Developer and Develops tables!");
+    console.log("Successfully populated Developer and Develops tables! Rows inserted: ", inserted);
 }
 
 async function populateGenreTable(genreIds) {
-    let i = 0;
-    for (const [genreId, gameTitle] of genreIds) {
+    let inserted = 0;
+    for (const [genreId, gameTitles] of genreIds) {
         // Fetch genres by id
         const res = await axios.get(`${RAWG_API}/genres/${genreId}`, {
             params: {
@@ -132,20 +143,22 @@ async function populateGenreTable(genreIds) {
         db.query(genreQuery, gqValues, (err) => {
             if (err) throw err;
         });
-        // Insert game title and genre name into Game_Genre
-        const gameGenreQuery = `INSERT INTO Game_Genre (game_title, genre_name) VALUES (?,?)`;
-        const ggqValues = [gameTitle, genre.name];
-        db.query(gameGenreQuery, ggqValues, (err) => {
-            if (err) throw err;
-        });
-        console.log("Genre: ", i++);
+        // Insert game titles and genre name into Game_Genre
+        for (const gameTitle of gameTitles) {
+            const gameGenreQuery = `INSERT INTO Game_Genre (game_title, genre_name) VALUES (?,?)`;
+            const ggqValues = [gameTitle, genre.name];
+            db.query(gameGenreQuery, ggqValues, (err) => {
+                if (err) throw err;
+            });
+        }
+        inserted++;
     }
-    console.log("Successfully populated Genre and Game_Genre tables!");
+    console.log("Successfully populated Genre and Game_Genre tables! Rows inserted: ", inserted);
 }
 
 async function populatePlatformTable(platformIds) {
-    let i = 0;
-    for (const [platformId, gameTitle] of platformIds) {
+    let inserted = 0;
+    for (const [platformId, gameTitles] of platformIds) {
         // Fetch platforms by id
         const res = await axios.get(`${RAWG_API}/platforms/${platformId}`, {
             params: {
@@ -160,15 +173,17 @@ async function populatePlatformTable(platformIds) {
         db.query(platformQuery, pqValues, (err) => {
             if (err) throw err;
         });
-        // Insert game title and platform name into Played_On
-        const playedOnQuery = `INSERT INTO Played_On (game_title, plat_name) VALUES (?,?)`;
-        const poqValues = [gameTitle, plat.name];
-        db.query(playedOnQuery, poqValues, (err) => {
-            if (err) throw err;
-        });
-        console.log("Platform: ", i++);
+        // Insert game titles and platform name into Played_On
+        for (const gameTitle of gameTitles) {
+            const playedOnQuery = `INSERT INTO Played_On (game_title, plat_name) VALUES (?,?)`;
+            const poqValues = [gameTitle, plat.name];
+            db.query(playedOnQuery, poqValues, (err) => {
+                if (err) throw err;
+            });
+        }
+        inserted++;
     }
-    console.log("Successfully populated Platform and Played_On tables!");
+    console.log("Successfully populated Platform and Played_On tables! Rows inserted: ", inserted);
 }
 
 // Populates the Gamer table with 20 gamer profiles with unique tags, bios, and avatars
@@ -196,16 +211,16 @@ async function populateGamerTable() {
         { tag: "Zellsis", dob: "1993-12-22", bio: "Retro arcade player", avatar: "https://i.pravatar.cc/150?img=20" }
     ];
     
-    let i = 0;
+    let inserted = 0;
     for (const gamer of gamers) {
         const gamerQuery = `INSERT INTO Gamer (gamer_tag, gamer_dob, bio, avatar) VALUES (?,?,?,?)`;
         const gqValues = [gamer.tag, gamer.dob, gamer.bio, gamer.avatar];
         db.query(gamerQuery, gqValues, (err) => {
             if (err) throw err;
         });
-        console.log("Gamer: ", i++);
+        inserted++;
     }
-    console.log("Successfully populated Gamer table!");
+    console.log("Successfully populated Gamer table! Rows inserted: ", inserted);
 }
 
 // Populates the User table with 10 users, each linked to one of the 20 gamers
@@ -223,20 +238,20 @@ async function populateUserTable() {
         { username: "Ludwig", email: "ItzLud@gmail.com", dob: "1996-08-12", gamer_tag: "Ludwig" }
     ];
     
-    let i = 0;
+    let inserted = 0;
     for (const user of users) {
         const userQuery = `INSERT INTO User (username, email, user_dob, gamer_tag) VALUES (?,?,?,?)`;
         const uqValues = [user.username, user.email, user.dob, user.gamer_tag];
         db.query(userQuery, uqValues, (err) => {
             if (err) throw err;
         });
-        console.log("User: ", i++);
+        inserted++;
     }
-    console.log("Successfully populated User table!");
+    console.log("Successfully populated User table! Rows inserted: ", inserted);
 }
 
 // Populates the Review table with 40 reviews distributed across games and users
-async function populateReviewTable(gameIds) {
+async function populateReviewTable() {
     // Get array of game titles from the database since we need them for foreign keys
     db.query(`SELECT game_title FROM Game LIMIT 40`, (err, games) => {
         if (err) throw err;
@@ -245,8 +260,7 @@ async function populateReviewTable(gameIds) {
             return;
         }
         
-        const usernames = ["Ninja", "TSM_Myth", "Ronaldo7", "Fl67cher67", "Mr_IR7", 
-                          "Tenzz", "Zellsis", "yusuf7n", "Ludwig", "Messi"];
+        const usernames = ["Ninja", "TSM_Myth", "Ronaldo7", "Fl67cher67", "Mr_IR7", "Tenzz", "Zellsis", "yusuf7n", "Ludwig", "Messi"];
         const reviewTitles = [
             "Amazing experience!", "Great gameplay", "Highly recommended", "Worth the money", "Epic adventure",
             "Mind-blowing graphics", "Perfect story", "Addictive gameplay", "Best purchase ever", "Absolutely fantastic",
@@ -275,7 +289,7 @@ async function populateReviewTable(gameIds) {
             "A game that will stay with me forever."
         ];
         
-        let i = 0;
+        let inserted = 0;
         for (let r = 0; r < 40; r++) {
             const gameIndex = r % games.length;
             const gameTitle = games[gameIndex].game_title;
@@ -293,9 +307,9 @@ async function populateReviewTable(gameIds) {
             db.query(reviewQuery, rqValues, (err) => {
                 if (err) throw err;
             });
-            console.log("Review: ", i++);
+            inserted++;
         }
-        console.log("Successfully populated Review table!");
+        console.log("Successfully populated Review table! Rows inserted: ", inserted);
     });
 }
 
@@ -347,7 +361,7 @@ async function populateFollowsTable() {
 }
 
 // Populates the Plays table with which gamers have played which games
-async function populatePlaysTable(gameIds) {
+async function populatePlaysTable() {
     // Get all gamer tags
     db.query(`SELECT gamer_tag FROM Gamer`, (err, gamers) => {
         if (err) throw err;
