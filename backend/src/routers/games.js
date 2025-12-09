@@ -74,9 +74,13 @@ router.get("/:title", (req, res) => {
 router.get("/filter/developer/:devName", (req, res) => {
     const { devName } = req.params;
     const query = `
-        SELECT DISTINCT g.* FROM Game g
-        JOIN Develops d ON g.game_title = d.game_title
-        WHERE d.dev_name = ?
+        SELECT *
+        FROM Game
+        WHERE game_title IN (
+            SELECT game_title
+            FROM Develops
+            WHERE dev_name = ?
+        )
     `;
     db.query(query, [decodeURIComponent(devName)], (err, results = []) => {
         if (err) {
@@ -90,9 +94,13 @@ router.get("/filter/developer/:devName", (req, res) => {
 router.get("/filter/platform/:platformName", (req, res) => {
     const { platformName } = req.params;
     const query = `
-        SELECT DISTINCT g.* FROM Game g
-        JOIN Played_On po ON g.game_title = po.game_title
-        WHERE po.plat_name = ?
+        SELECT *
+        FROM Game
+        WHERE game_title IN (
+            SELECT po.game_title
+            FROM Played_On po
+            WHERE po.plat_name = ?
+        )
     `;
     db.query(query, [decodeURIComponent(platformName)], (err, results = []) => {
         if (err) {
@@ -106,9 +114,13 @@ router.get("/filter/platform/:platformName", (req, res) => {
 router.get("/filter/genre/:genreName", (req, res) => {
     const { genreName } = req.params;
     const query = `
-        SELECT DISTINCT g.* FROM Game g
-        JOIN Game_Genre gg ON g.game_title = gg.game_title
-        WHERE gg.genre_name = ?
+        SELECT *
+        FROM Game
+        WHERE game_title IN (
+            SELECT gg.game_title
+            FROM Game_Genre gg
+            WHERE gg.genre_name = ?
+        )
     `;
     db.query(query, [decodeURIComponent(genreName)], (err, results = []) => {
         if (err) {
@@ -117,7 +129,5 @@ router.get("/filter/genre/:genreName", (req, res) => {
         return res.json(results);
     });
 });
-
-// GET games by filter (LARRY)
 
 export default router;
