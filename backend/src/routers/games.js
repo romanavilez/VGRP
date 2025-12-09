@@ -5,7 +5,19 @@ const router = express.Router();
 
 // GET all games
 router.get("/", (req, res) => {
-    db.query("SELECT * FROM Game", (err, results = []) => {
+    const query = `
+        SELECT 
+            g.*,
+            GROUP_CONCAT(DISTINCT d.dev_name SEPARATOR ', ') AS developers,
+            GROUP_CONCAT(DISTINCT po.plat_name SEPARATOR ', ') AS platforms,
+            GROUP_CONCAT(DISTINCT gg.genre_name SEPARATOR ', ') AS genres
+        FROM Game g
+        LEFT JOIN Develops d ON d.game_title = g.game_title
+        LEFT JOIN Played_On po ON po.game_title = g.game_title
+        LEFT JOIN Game_Genre gg ON gg.game_title = g.game_title
+        GROUP BY g.game_title
+    `;
+    db.query(query, (err, results = []) => {
         if (err) {
             return res.status(500).json({ error: "DB error" });
         }
@@ -15,32 +27,32 @@ router.get("/", (req, res) => {
 
 // filter selecting developer, platform, and genre.
 router.get("/filter", (req, res) => {
-  const { developer = null, platform = null, genre = null } = req.query;
+    const { developer = null, platform = null, genre = null } = req.query;
 
-  const sql = `
-    SELECT DISTINCT g.*
-    FROM Game g
-    LEFT JOIN Develops d      ON d.game_title = g.game_title
-    LEFT JOIN Played_On po    ON po.game_title = g.game_title
-    LEFT JOIN Game_Genre gg   ON gg.game_title = g.game_title
-    WHERE (? IS NULL OR d.dev_name = ?)
-      AND (? IS NULL OR po.plat_name = ?)
-      AND (? IS NULL OR gg.genre_name = ?)
-    ORDER BY g.overall_rating DESC, g.release_date DESC
-  `;
+    const sql = `
+        SELECT DISTINCT g.*
+        FROM Game g
+        LEFT JOIN Develops d      ON d.game_title = g.game_title
+        LEFT JOIN Played_On po    ON po.game_title = g.game_title
+        LEFT JOIN Game_Genre gg   ON gg.game_title = g.game_title
+        WHERE (? IS NULL OR d.dev_name = ?)
+        AND (? IS NULL OR po.plat_name = ?)
+        AND (? IS NULL OR gg.genre_name = ?)
+        ORDER BY g.overall_rating DESC, g.release_date DESC
+    `;
 
-  const params = [
-    developer, developer,
-    platform, platform,
-    genre, genre
-  ];
+    const params = [
+        developer, developer,
+        platform, platform,
+        genre, genre
+    ];
 
-  db.query(sql, params, (err, rows = []) => {
-    if (err) {
-        return res.status(500).json({ error: "DB error", details: err });
-    }
-    return res.json(rows);
-  });
+    db.query(sql, params, (err, rows = []) => {
+        if (err) {
+            return res.status(500).json({ error: "DB error", details: err });
+        }
+        return res.json(rows);
+    });
 });
 
 
