@@ -1,9 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Monoton&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,500;1,500&display=swap');
 
 body {
     background-color: #1B1B1B;
-    padding: 30px 80px;
+    padding: 30px 70px;
     top: 80px;
 }
 
@@ -12,13 +14,25 @@ header {
     display: flex;
     gap: 50px;
     align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #1B1B1B;
 }
 
 header a {
     display: flex;
     text-decoration: none;
     color: white;
-    font-size: 25px;
+    font-size: 30px;
+}
+
+header h1 {
+    transition: all 0.25s ease;
+}
+
+header h1:hover {
+    scale: 105%;
 }
 
 header h1 a span {
@@ -44,6 +58,31 @@ header nav {
     font-family: "Staatliches", sans-serif;
     font-weight: 400;
     font-style: normal;
+}
+
+header nav a {
+    position: relative;
+}
+
+header nav .active {
+    text-decoration: underline;
+    text-decoration-color: #7442C8;
+    text-decoration-thickness: 3px;
+}
+
+header nav a::after {
+    content: "";
+    background-color: #7442C8;
+    position: absolute;
+    mix-blend-mode: darken;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    transition: all 0.5s ease-in-out;
+}
+
+header nav a:hover::after {
+    width: 100%;
 }
 
 header .utility-list {
@@ -87,10 +126,337 @@ header .utility-list .search-bar input:focus{
     width: 100%;
 }
 
+
+
+/* ----------------- ALL PAGES ----------------- */
+.all-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    width: 100%;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
 .page-title {
     font-family: "Staatliches", sans-serif;
     font-weight: 400;
     font-style: normal;
     font-size: 50px;
+    color: #7442C8;
+}
+
+/* ----------------- HOME PAGE ----------------- */
+.home .home-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.home .home-header .filter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 10rem;
+    color: darkgrey;
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 20px;
+}
+
+.home .home-header .filter .filter-name {
+    margin: 0rem;
+    text-align: center;
+}
+
+.home .home-header .filter .dropdown-box .dropdown-box-text{
+    margin: 0rem;
+    height: 2rem;
+    background-color: #1B1B1B;
+    border: 2px solid white;
+    border-radius: 10px;
+}
+
+.home .home-header .filter .dropdown-box .dropdown-list {
+    visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    color: #1B1B1B;
+    padding: 0rem;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.home .home-header .filter .dropdown-box:hover .dropdown-list {
+    visibility: visible;
+}
+
+.home .home-header .filter .dropdown-box .dropdown-list li {
+    display: flex;
+    justify-content: center;
+    margin: 0rem;
+    padding: 0rem;
+    list-style-type: none;
+}
+
+.home .home-header .filter .dropdown-box .dropdown-list li:hover {
+    background-color: #7442C8;
+    color: white;
+    cursor: pointer;
+}
+
+/* ----------------- ALL CARDS ----------------- */
+.card { 
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 7px solid lightgrey;
+    border-radius: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    color: white;
+    transition: all 0.5s ease;
+}
+
+.card:hover {
+    background-color: lightgrey;
+    color:#1B1B1B;
+    border-color: #7442C8;
+    scale: 103%;
+}
+
+.card .image-container {
+    position: relative;
+    max-height: 13rem;
+    overflow: hidden;
+}
+
+.card .image-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    filter: grayscale(100%);
+}
+
+.card:hover .image-container img {
+    filter: grayscale(0%);
+}
+
+.card .card-name {
+    margin: 5px 0px;
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: xx-large;
+}
+
+.card p {
+    margin-top: auto;
+    font-family: "Momo Trust Display", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.card .scroll-container {
+    padding-right: 3px;
+}
+
+.card .scroll-container p {
+    height: 160px;
+    overflow-y: auto;
+}
+
+.card .scroll-container p::-webkit-scrollbar {
+    background-color: #fff transparent;
+    width: 10px;
+    height: 10px;
+}
+
+.card .scroll-container p::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: #1B1B1B;
+}
+
+.card .scroll-container p::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+
+.card .card-info {
+    font-family: "Source Code Pro", monospace;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.card .card-info * {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.card button {
+    margin-top: 10px;
+    border-color: #1B1B1B;
+    border-radius: 10px;
+    background-color: lightgrey;
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: large;
+    transition: all 0.3s ease;
+}
+
+.card button:hover {
+    background-color: #1B1B1B;
+    color: white;
+}
+
+.card button:active {
+    scale: 95%;
+}
+
+/* ----------------- GAME CARD ----------------- */
+#game-card .image-container .game-rating {
+    position: absolute;
+    right: 10px;
+    bottom: 5px;
+    padding: 5px;
+    background-color: #1B1B1B;
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+}
+
+#game-card:hover .image-container p {
+    background-color: #7442C8;
+}
+
+/* ----------------- REVIEW CARD ----------------- */
+.review-card {
+    position: relative;
+    margin-bottom: 1rem;
+    z-index: 0;
+    width: 100%;
+    padding: 0.1rem 1rem;
+    border: 2px solid lightgrey;
+    border-radius: 10px;
+    background-image: linear-gradient(
+        180deg,
+        rgba(27, 27, 27, 0.6),
+        rgba(255, 255, 255, 0.4)
+    );
+}
+
+.review-card::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    height: 0%;
+    width: 100%;
+    border-radius: 10px;
+    background-image: linear-gradient(
+        180deg,
+        rgba(27, 27, 27, 0.8),
+        rgba(116, 66, 200, 1)
+    );
+    transition: all 0.5s ease-in-out;
+}
+
+.review-card:hover::after {
+    height: 100%;
+}
+
+.review-card .review-header {
+    display: flex;
+    justify-content: space-between;
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.review-card .review-header #review-game {
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 36px;
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: #1B1B1B;
+    margin-bottom: 0rem;
+}
+
+.review-card:hover .review-header #review-game {
+    text-decoration-color: #7442C8;
+}
+
+
+.review-card .review-header #rating {
+    padding: 5px;
+    background-color: #1B1B1B;
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+    font-size: larger;
+}
+
+.review-card:hover .review-header #rating {
+    background-color: #7442C8;
+}
+
+.review-card #review-title {
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: xx-large;
     color: lightgrey;
+    margin: 0rem;
+}
+
+.review-card .user-info {
+    width: fit-content;
+    color: darkgrey;
+}
+
+.review-card .user-info .user-profile {
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    gap: 5px;
+    font-size: x-large;
+    margin-bottom: 0rem;
+}
+
+.review-card .user-info .user-profile #username {
+    font-family: "Staatliches", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.review-card .user-info #post-date {
+    margin-top: 0rem;
+    margin-top: auto;
+    font-family: "Momo Trust Display", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.review-card #review-body {
+    font-family: "Momo Trust Display", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: lightgrey;
+}
+
+/* ----------------- GAMER CARD ----------------- */
+#gamer-card .image-container {
+    max-height: fit-content;
+}
+
+#gamer-card .scroll-container {
+    max-height: 5rem;
 }
