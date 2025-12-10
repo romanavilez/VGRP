@@ -1,7 +1,10 @@
 import { React, useEffect, useState  } from 'react';
 import GameCard from '../components/GameCard.jsx';
+import { useLocation } from 'react-router-dom';
 
 const HomePage = () => {
+    const location = useLocation();
+
     const [games, setGames] = useState([]);
     const [developers, setDevelopers] = useState([]);
     const [platforms, setPlatforms] = useState([]);

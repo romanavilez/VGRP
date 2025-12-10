@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -16,18 +17,18 @@ const Navbar = () => {
     return (
         <header>
             <h1 id="site">
-                <Link to="/">
+                <Link to="/" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
                     <span id="vg">VG</span>
                     <span id="rp">RP</span>
                 </Link>
             </h1>
 
             <nav>
-                <Link to="/reviews">Reviews</Link>
-                <Link to="/gamers">Gamers</Link>
-                <Link to="/developers">Developers</Link>
-                <Link to="/platforms">Platforms</Link>
-                <Link to="/genres">Genres</Link>
+                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/reviews" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Reviews</NavLink>
+                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/gamers" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Gamers</NavLink>
+                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/developers" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Developers</NavLink>
+                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/platforms" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Platforms</NavLink>
+                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/genres" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Genres</NavLink>
             </nav>
 
             <div className="utility-list">
