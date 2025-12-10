@@ -9,6 +9,10 @@ body {
     top: 80px;
 }
 
+button {
+    cursor: pointer;
+}
+
 /* ----------------- NAVBAR -------------------- */
 header {
     display: flex;
