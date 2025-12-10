@@ -6,7 +6,7 @@ const emptyForm = {
     rev_title: '',
     rev_text: '',
     rating: 5,
-    game_id: '',
+    game_title: '',
     username: ''
 };
 
@@ -69,7 +69,7 @@ const ReviewPage = () => {
             rev_title: r.rev_title ?? '',
             rev_text: r.rev_text ?? '',
             rating: r.rating ?? 5,
-            game_id: r.game_id ?? '',
+            game_title: r.game_title ?? '',
             username: r.username ?? ''
         });
 
@@ -88,8 +88,11 @@ const ReviewPage = () => {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    ...form,
-                    rating: Number(form.rating)
+                    rev_title: form.rev_title,
+                    rev_text: form.rev_text,
+                    rating: Number(form.rating),
+                    game_title: form.game_title,  
+                    username: form.username
                 })
             });
 
@@ -172,17 +175,15 @@ const ReviewPage = () => {
                             required
                         />
                     </label>
-
                     <label>
-                        Game ID
+                        Game Title
                         <input
-                            name="game_id"
-                            value={form.game_id}
+                            name="game_title"
+                            value={form.game_title}
                             onChange={onChange}
                             required
                         />
                     </label>
-
                     <label>
                         Username
                         <input
@@ -220,11 +221,11 @@ const ReviewPage = () => {
             <div className="review-cards">
                 {reviews.map(r => (
                     <ReviewCard
-                        key={r.rev_id}
-                        id={r.rev_id}
-                        title={r.rev_title}
-                        text={r.rev_text}
-                        date={(r.rev_date ?? '').toString().substring(0, 10)}
+                        key={r.id}
+                        id={r.id}
+                        title={r.title}
+                        text={r.text}
+                        date={(r.date ?? '').toString().substring(0, 10)}
                         rating={r.rating}
                         game_title={r.game_title}
                         username={r.username}
