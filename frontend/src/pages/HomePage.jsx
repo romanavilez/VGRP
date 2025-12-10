@@ -64,6 +64,39 @@ const HomePage = () => {
             });
     }, []);
 
+    // search functionality
+    useEffect(() => {
+        const searchedGame = location.state?.scrollToTitle;
+        let gameTitle;
+        if (searchedGame) {
+            const matchedGame = filteredGames.find((game) => {
+                if (game.game_title.toLowerCase() === searchedGame) {
+                    gameTitle = game.game_title;
+                    console.log("matched game");
+                    console.log(gameTitle);
+                    return true;
+                }
+                console.log("didn't match game");
+                return false;
+            });
+            if (matchedGame) {
+                const gameCard = document.querySelector(`[data-title="${gameTitle}"]`);
+                if (gameCard) {
+                    gameCard.scrollIntoView({behavior: "smooth", block: "center"});
+                    gameCard.style.color = '#EFBF04';
+                    gameCard.style.transition = 'color 0.5s ease-in-out'
+                    const card = gameCard.parentElement;
+                    card.style.border = '7px solid #EFBF04';
+
+                    setTimeout(() => {
+                        gameCard.style.color = '';
+                        card.style.border = '';
+                    }, 2500);
+                }
+            }
+        }
+    }, [location.state]);
+
     const applyFilters = () => {
         const params = new URLSearchParams();
         if (filteredDev) params.append("developer", filteredDev);

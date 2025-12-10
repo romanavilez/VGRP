@@ -2,6 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
+    const [searchTerm, setSearchTerm] = useState("");
+    const navigate = useNavigate();
+    
+    const handleSearch = (e) => {
+        if (e.key === "Enter") {
+            navigate("/", {
+                state: { scrollToTitle: searchTerm.toLowerCase()}
+            });
+        } 
+    }
+
     return (
         <header>
             <h1 id="site">
@@ -22,7 +33,13 @@ const Navbar = () => {
             <div className="utility-list">
                 <div className="search-bar">
                     <i className="fi fi-rr-search"></i>
-                    <input type="text" role="searchbox" placeholder="Search"/>
+                    <input type="text" 
+                        role="searchbox" 
+                        placeholder="Search games..." 
+                        value={searchTerm}
+                        onChange={(e) => {setSearchTerm(e.target.value)}}
+                        onKeyDown={handleSearch}
+                    />
                 </div>
                 <div className="header-menu">
                     <a href="">

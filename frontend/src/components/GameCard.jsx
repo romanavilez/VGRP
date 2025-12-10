@@ -7,7 +7,7 @@ const GameCard = ({image, rating, title, description, release_date, devs, platfo
                 <img src={image} alt="game image" />
                 <p className='game-rating'>{rating}/5</p>
             </div>
-            <h2 className='card-name'>{title}</h2>
+            <h2 className='card-name' data-title={title}>{title}</h2>
             <div className="scroll-container">
                 <p className='card-description'>{description.replace(/<[^>]+>/g, "")}</p>
             </div>
