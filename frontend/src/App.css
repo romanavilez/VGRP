@@ -255,6 +255,86 @@ header .utility-list .search-bar input:focus{
     background-color: #7442C8;
     scale: 95%;
 }
+
+/* ----------------- REVIEW PAGE ------------------- */
+.reviews {
+    width: 100%;
+}
+
+.add-review-container {
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.add-review-title {
+    font-family: "Staatliches", sans-serif;
+    font-size: 50px;
+    color: #7442C8;
+    margin-bottom: 1rem;
+}
+
+.add-review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    padding: 1.5rem;
+    border: 2px solid lightgrey;
+    border-radius: 10px;
+    background-image: linear-gradient(
+        180deg,
+        rgba(27, 27, 27, 0.6),
+        rgba(255, 255, 255, 0.1)
+    );
+    width: 70%;
+}
+
+.add-review-form label {
+    font-family: "Staatliches", sans-serif;
+    color: lightgrey;
+    font-size: 20px;
+}
+
+.add-review-form input,
+.add-review-form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid white;
+    background-color: #1B1B1B;
+    color: white;
+    font-family: "Source Code Pro", monospace;
+    font-size: 16px;
+}
+
+.add-review-form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.add-review-form input:focus,
+.add-review-form textarea:focus {
+    outline: none;
+    border-color: #7442C8;
+}
+
+.add-review-btn {
+    width: 180px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid white;
+    background-color: #1B1B1B;
+    color: white;
+    font-family: "Staatliches", sans-serif;
+    font-size: 22px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.add-review-btn:hover {
+    background-color: #7442C8;
+    scale: 95%;
+}
+
 /* ----------------- ALL CARDS ----------------- */
 .card { 
     position: relative;
@@ -525,79 +605,4 @@ header .utility-list .search-bar input:focus{
 
 #gamer-card .scroll-container {
     max-height: 5rem;
-}
-
-
-
-.add-review-container {
-    margin: 2rem 0;
-}
-
-.add-review-title {
-    font-family: "Staatliches", sans-serif;
-    font-size: 50px;
-    color: #7442C8;
-    margin-bottom: 1rem;
-}
-
-.add-review-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-    padding: 1.5rem;
-    border: 2px solid lightgrey;
-    border-radius: 10px;
-    background-image: linear-gradient(
-        180deg,
-        rgba(27, 27, 27, 0.6),
-        rgba(255, 255, 255, 0.1)
-    );
-    width: 70%;
-}
-
-.add-review-form label {
-    font-family: "Staatliches", sans-serif;
-    color: lightgrey;
-    font-size: 20px;
-}
-
-.add-review-form input,
-.add-review-form textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 2px solid white;
-    background-color: #1B1B1B;
-    color: white;
-    font-family: "Source Code Pro", monospace;
-    font-size: 16px;
-}
-
-.add-review-form textarea {
-    min-height: 150px;
-    resize: vertical;
-}
-
-.add-review-form input:focus,
-.add-review-form textarea:focus {
-    outline: none;
-    border-color: #7442C8;
-}
-
-.add-review-btn {
-    width: 180px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 2px solid white;
-    background-color: #1B1B1B;
-    color: white;
-    font-family: "Staatliches", sans-serif;
-    font-size: 22px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-.add-review-btn:hover {
-    background-color: #7442C8;
-    scale: 95%;
 }

@@ -1,8 +1,9 @@
 import { React, useEffect, useState  } from 'react';
 import GameCard from '../components/GameCard.jsx';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+    const navigate = useNavigate();
     const location = useLocation();
 
     const [games, setGames] = useState([]);
@@ -20,16 +21,12 @@ const HomePage = () => {
             .then((res) => res.json())
             .then((data) => {
                 setGames(data);
+                setFilteredGames(data);
             })
             .catch((err) => {
                 console.log("Error fetching games:", err);
             });
     }, []);
-
-    useEffect(() => {
-        const sorted = [...games].sort((a, b) => b.overall_rating - a.overall_rating);
-        setFilteredGames(sorted);
-    }, [games])
 
     // Fetch all developers
     useEffect(() => {
@@ -67,8 +64,36 @@ const HomePage = () => {
             });
     }, []);
 
-    // search functionality
     useEffect(() => {
+        if (!location.state || Object.keys(location.state).length === 0) return;
+
+        searchGame();
+
+        const dev = location.state?.devFilter;
+        if (dev) setFilteredDeveloper(dev);
+
+        const plat = location.state?.platFilter;
+        if (plat) setFilteredPlatform(plat);
+
+        const genre = location.state?.genreFilter;
+        if (genre) setFilteredGenre(genre);
+
+        if (dev || plat || genre) {
+            const applyButton = document.querySelector("#apply-filter");
+            applyButton.style.border = '5px solid #7442C8';
+            applyButton.transition = 'border 0.25s ease-in-out';
+
+            setTimeout(() => {
+                applyButton.style.border = '';
+            }, 2500)
+        }
+
+        navigate(location.pathname, {replace: true, state:{}});
+
+    }, [location.state]);
+    
+    // search functionality
+    const searchGame = () => {
         const searchedGame = location.state?.scrollToTitle;
         let gameTitle;
         if (searchedGame) {
@@ -98,7 +123,7 @@ const HomePage = () => {
                 }
             }
         }
-    }, [location.state]);
+    }
 
     const applyFilters = () => {
         const params = new URLSearchParams();

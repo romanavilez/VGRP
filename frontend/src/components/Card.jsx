@@ -1,10 +1,23 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Card = ({cardType, name, description, image, gamesCount}) => {
-    let buttonId;
-    if (cardType === 'developer') buttonId = 'developer-games';
-    else if (cardType === 'genre') buttonId = 'genre-games';
-    else if (cardType === 'platform') buttonId = 'platform-games';
+    const navigate = useNavigate();
+    const handleDevGameList = () => {
+        if (cardType === 'developer') {
+            navigate("/", {
+                state: {devFilter: name}
+            });
+        } else if (cardType === 'platform') {
+            navigate("/", {
+                state: {platFilter: name}
+            });
+        } else if (cardType === 'genre') {
+            navigate("/", {
+                state: {genreFilter: name}
+            });
+        }
+    }
 
     return (
         <div className='card'>
@@ -18,7 +31,7 @@ const Card = ({cardType, name, description, image, gamesCount}) => {
             <div className="card-info">
                 <div className="games-count"><span>GAMES COUNT:</span><span>{gamesCount}</span></div>
             </div>
-            <button id={buttonId}>VIEW GAME LIST</button>
+            <button onClick={handleDevGameList}>VIEW GAME LIST</button>
         </div>
     )
 }
