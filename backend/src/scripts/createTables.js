@@ -33,6 +33,7 @@ export const CreateTables = async () => {
         CREATE TABLE IF NOT EXISTS User (
             username VARCHAR(32) NOT NULL PRIMARY KEY, 
             email VARCHAR(254),
+            password VARCHAR(50),
             user_dob DATE CHECK(user_dob <= '2026-01-01'),
             profile_pic VARCHAR(512),
             gamer_tag VARCHAR(32)
