@@ -1,54 +1,52 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import LoginPopup from './LoginPopup.jsx';
+import SignUpPage from './SignUpPopup.jsx';
 
 const Navbar = () => {
-    const [searchTerm, setSearchTerm] = useState("");
-    const navigate = useNavigate();
-    
-    const handleSearch = (e) => {
-        if (e.key === "Enter") {
-            navigate("/", {
-                state: { scrollToTitle: searchTerm.toLowerCase()}
-            });
-        } 
-    }
-
+    const [showLogin, setShowLogin] = useState(false);
+    const [showSignUp, setShowSignUp] = useState(false);
     return (
-        <header>
-            <h1 id="site">
-                <Link to="/" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
-                    <span id="vg">VG</span>
-                    <span id="rp">RP</span>
-                </Link>
-            </h1>
+        <>
+            <header>
+                <h1 id="site">
+                    <Link to="/">
+                        <span id="vg">VG</span>
+                        <span id="rp">RP</span>
+                    </Link>
+                </h1>
 
-            <nav>
-                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/reviews" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Reviews</NavLink>
-                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/gamers" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Gamers</NavLink>
-                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/developers" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Developers</NavLink>
-                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/platforms" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Platforms</NavLink>
-                <NavLink className={({ isActive }) => (isActive ? 'active' : '')} to="/genres" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>Genres</NavLink>
-            </nav>
+                <nav>
+                    <Link to="/reviews">Reviews</Link>
+                    <Link to="/gamers">Gamers</Link>
+                    <Link to="/developers">Developers</Link>
+                    <Link to="/platforms">Platforms</Link>
+                    <Link to="/genres">Genres</Link>
+                </nav>
 
-            <div className="utility-list">
-                <div className="search-bar">
-                    <i className="fi fi-rr-search"></i>
-                    <input type="text" 
-                        role="searchbox" 
-                        placeholder="Search games..." 
-                        value={searchTerm}
-                        onChange={(e) => {setSearchTerm(e.target.value)}}
-                        onKeyDown={handleSearch}
-                    />
+                <div className="utility-list">
+                    <div className="search-bar">
+                        <i className="fi fi-rr-search"></i>
+                        <input type="text" role="searchbox" placeholder="Search"/>
+                    </div>
+                
+                    <div className="header-menu">
+                        <a href="" onClick={(e) => {
+                            e.preventDefault();
+                            setShowLogin(true);
+                        }}>
+                            <i className="fi fi-rr-circle-user"></i>
+                        </a>
+                        {showLogin && <LoginPopup setShowLogin={setShowLogin} setShowSignUp={setShowSignUp} />}
+                        {showSignUp && <SignUpPage setShowSignUp={setShowSignUp} setShowLogin={setShowLogin}/>}
+                    </div>
                 </div>
-                <div className="header-menu">
-                    <a href="">
-                        <i className="fi fi-rr-menu-burger"></i>
-                    </a>
-                </div>
+            </header>
+            <div className="welcome-container">
+                <p className="welcome-text"></p>
             </div>
-        </header>
+        </>
     )
 }
 
