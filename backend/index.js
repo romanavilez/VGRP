@@ -7,8 +7,10 @@ import reviewRoutes from './src/routers/reviews.js';
 import platformRoutes from './src/routers/platforms.js';
 import genreRoutes from './src/routers/genres.js';
 import developerRoutes from './src/routers/developers.js';
+import userRoutes from './src/routers/users.js';
 
 const app = express();
+app.use(express.json());
 
 app.use(cors());
 
@@ -18,6 +20,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/platforms", platformRoutes);
 app.use("/api/genres", genreRoutes);
 app.use("/api/developers", developerRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(5001, () => {
     console.log("Server is running on port 5001");

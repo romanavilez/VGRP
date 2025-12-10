@@ -226,28 +226,28 @@ async function populateGamerTable() {
 // Populates the User table with 10 users, each linked to one of the 20 gamers
 async function populateUserTable() {
     const users = [
-        { username: "Ninja", email: "Ninja@gmail.com", dob: "1995-03-15", gamer_tag: "Ninja" },
-        { username: "TSM_Myth", email: "Myth@yahoo.com", dob: "1998-07-22", gamer_tag: "Myth" },
-        { username: "Ronaldo7", email: "RonaldoRonaldoSIUU@gmail.com", dob: "1996-11-30", gamer_tag: "Ronaldo" },
-        { username: "Messi", email: "ItzMessi@gmail.com", dob: "1999-01-10", gamer_tag: "Messi" },
-        { username: "Mr_IR7", email: "ir7isme@gmail.com", dob: "2000-09-05", gamer_tag: "Mr_IR7" },
-        { username: "Fl67cher67", email: "fletcher6767@outlook.com", dob: "1994-05-18", gamer_tag: "Fl67cher" },
-        { username: "Tenzz", email: "Tyson@uw.edu", dob: "2001-06-08", gamer_tag: "Tenz" },
-        { username: "Zellsis", email: "Zellz@gmail.com", dob: "1993-12-22", gamer_tag: "Zellsis" },
-        { username: "yusuf7n", email: "yousuf@gmail.com", dob: "1994-09-11", gamer_tag: "yusuf7n" },
-        { username: "Ludwig", email: "ItzLud@gmail.com", dob: "1996-08-12", gamer_tag: "Ludwig" }
+        { username: "Ninja", email: "Ninja@gmail.com", password: "Ninja", dob: "1995-03-15", gamer_tag: "Ninja" },
+        { username: "TSM_Myth", email: "Myth@yahoo.com", password: "TSM", dob: "1998-07-22", gamer_tag: "Myth" },
+        { username: "Ronaldo7", email: "RonaldoRonaldoSIUU@gmail.com", password: "Ronaldo", dob: "1996-11-30", gamer_tag: "Ronaldo" },
+        { username: "Messi", email: "ItzMessi@gmail.com", password: "Messi", dob: "1999-01-10", gamer_tag: "Messi" },
+        { username: "Mr_IR7", email: "ir7isme@gmail.com", password: "MrIR7", dob: "2000-09-05", gamer_tag: "Mr_IR7" },
+        { username: "Fl67cher67", email: "fletcher6767@outlook.com", password: "Fl67", dob: "1994-05-18", gamer_tag: "Fl67cher" },
+        { username: "Tenzz", email: "Tyson@uw.edu", password: "Tenz", dob: "2001-06-08", gamer_tag: "Tenz" },
+        { username: "Zellsis", email: "Zellz@gmail.com", password: "Zell", dob: "1993-12-22", gamer_tag: "Zellsis" },
+        { username: "yusuf7n", email: "yousuf@gmail.com", password: "Yusuf", dob: "1994-09-11", gamer_tag: "yusuf7n" },
+        { username: "Ludwig", email: "ItzLud@gmail.com", password: "Ludwig", dob: "1996-08-12", gamer_tag: "Ludwig" }
     ];
     
     let inserted = 0;
     for (const user of users) {
-        const userQuery = `INSERT INTO User (username, email, user_dob, gamer_tag) VALUES (?,?,?,?)`;
-        const uqValues = [user.username, user.email, user.dob, user.gamer_tag];
+        const userQuery = `INSERT INTO User (username, email, password, user_dob, gamer_tag) VALUES (?,?,?,?,?)`;
+        const uqValues = [user.username, user.email, user.password, user.dob, user.gamer_tag];
         db.query(userQuery, uqValues, (err) => {
             if (err) throw err;
         });
         inserted++;
     }
-    console.log("Successfully populated User table! Rows inserted: ", inserted);
+    console.log("Successfully populated User table! Rows inserted: ", inserted);
 }
 
 // Populates the Review table with 40 reviews distributed across games and users
