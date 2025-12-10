@@ -35,8 +35,7 @@ export const CreateTables = async () => {
             email VARCHAR(254),
             user_dob DATE CHECK(user_dob <= '2026-01-01'),
             profile_pic VARCHAR(512),
-            gamer_tag VARCHAR(32),
-            FOREIGN KEY (gamer_tag) REFERENCES Gamer(gamer_tag)
+            gamer_tag VARCHAR(32)
         );
     `;
     db.query(userTable, (err) => {
@@ -78,7 +77,7 @@ export const CreateTables = async () => {
     const genreTable = `
         CREATE TABLE IF NOT EXISTS Genre (
             genre_name VARCHAR(64) NOT NULL PRIMARY KEY,
-            genre_description VARCHAR(312),
+            genre_description TEXT,
             genre_image VARCHAR(512),
             genre_num_games INT CHECK(genre_num_games > 0)
         );
