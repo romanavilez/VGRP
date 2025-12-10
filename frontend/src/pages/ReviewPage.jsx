@@ -81,6 +81,7 @@ const ReviewPage = () => {
             setError('Could not create review.');
         } finally {
             setBusy(false);
+            window.location.reload();
         }
     };
 
