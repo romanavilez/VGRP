@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const GameCard = ({image, rating, title, description, release_date, devs, platforms, genres}) => {
+    const navigate = useNavigate();
     return (
         <div className='card' id='game-card'>
             <div className="image-container">
@@ -17,7 +19,7 @@ const GameCard = ({image, rating, title, description, release_date, devs, platfo
                 <div className="game-platforms"><span>PLATFORM(S):</span><span>{platforms}</span></div>
                 <div className="game-genres"><span>GENRE(S):</span><span>{genres}</span></div>
             </div>
-            <button id='game-reviews'>SEE REVIEWS</button>
+            <button id='game-reviews' onClick={() => navigate("/reviews", {state: {gameTitle: title}})}>SEE REVIEWS</button>
         </div>
     )
 }

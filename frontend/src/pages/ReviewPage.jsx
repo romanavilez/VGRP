@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReviewCard from '../components/ReviewCard.jsx';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const API = 'http://localhost:5001/api/reviews';
 const emptyForm = {
@@ -11,6 +12,9 @@ const emptyForm = {
 };
 
 const ReviewPage = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
     const [reviews, setReviews] = useState([]);
     const [form, setForm] = useState(emptyForm);
     const [editingId, setEditingId] = useState(null);
@@ -18,11 +22,31 @@ const ReviewPage = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
+        if (location.state?.gameTitle) return;
         fetch(API)
             .then(r => r.json())
             .then(d => setReviews(Array.isArray(d) ? d : []))
             .catch(() => setError('Failed to load reviews.'));
     }, []);
+
+    // Reviews for a specific game
+    useEffect(() => {
+        if (!location.state || Object.keys(location.state).length === 0) return;
+
+        const gameTitle = location.state?.gameTitle;
+        if (gameTitle) {
+            fetch(`http://localhost:5001/api/reviews/game/${encodeURIComponent(gameTitle)}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setReviews(Array.isArray(data) ? data : []);
+                })
+                .catch((err) => {
+                    console.log("Error fetching filtered reviews: ", err);
+                })
+        }
+
+        navigate(location.pathname, {replace:true, state:{}});
+    }, [location.state])
 
     const onChange = e =>
         setForm(f => ({ ...f, [e.target.name]: e.target.value }));
