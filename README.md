@@ -7,9 +7,9 @@ A full-stack web application that displays video game information in the form of
 
 ### Prerequisites
 Following installations are required:
-    - Node.js
-    - npm
-    - MySQL
+- Node.js
+- npm
+- MySQL
 
 ### Backend Setup
 1. Navigate to the backend folder
